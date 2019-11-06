@@ -27,7 +27,7 @@ stats() {
 }
 
 # Open repo
-repo() {
+gh() {
   if [ $# -eq 1 ];
     then
       open https://www.github.com/$1
@@ -56,11 +56,16 @@ issues() {
   open https://www.github.com/$1/$2/issues
 }
 
+# navigate in code folder
+goto() {
+  cd ~/code/$1
+}
+
 sttt() {
   cd ~/code/$1; stt;
 }
 
-dump() {
+kitt_dump() {
   git status # Make sure it's clean
   git checkout master && git pull origin master
   bundle install && yarn install

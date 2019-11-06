@@ -19,7 +19,8 @@
 		"public/packs",
 		"coverage"
 	],
-	"font_size": 17,
+	"font_size": 20,
+	"highlight_line": true,
 	"highlight_modified_tabs": true,
 	"hot_exit": false,
 	"ignored_packages":
@@ -38,6 +39,5 @@
 	"trim_trailing_white_space_on_save": true,
 	"update_check": false,
 	"use_tab_stops": true,
-	"wordWrap": false,
-  "highlight_line": true
+	"wordWrap": false
 }
