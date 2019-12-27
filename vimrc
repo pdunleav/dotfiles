@@ -1,248 +1,301 @@
-" Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
-set nocompatible
+" ========================================================================
+" Vundle stuff
+" ========================================================================
+set nocompatible " Required by vundle
+filetype off     " Required by vundle
 
-" source ~/.vimrc.before if it exists.
-if filereadable(expand("~/.vimrc.before"))
-source ~/.vimrc.before
-endif
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
-" ================ General Config ====================
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
 
-execute pathogen#infect()
-set number                      "Line numbers are good
-set relativenumber
-set backspace=indent,eol,start  "Allow backspace in insert mode
-set history=1000                "Store lots of :cmdline history
-set showcmd                     "Show incomplete cmds down the bottom
-set showmode                    "Show current mode down the bottom
-set gcr=a:blinkon0              "Disable cursor blink
-set visualbell                  "No sounds
-set autoread                    "Reload files changed outside vim
-set clipboard=unnamed
+" My bundles
+Plugin 'scrooloose/nerdtree'
+Plugin 'thoughtbot/vim-rspec'
+Plugin 'tpope/vim-bundler'
+Plugin 'tpope/vim-endwise'
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'ctrlpvim/ctrlp.vim'
 
-" This makes vim act like all other editors, buffers can
-" exist in the background without being in a window.
-" http://items.sjbach.com/319/configuring-vim-right
-set hidden
+" --------- Snippets -------------------------
+Plugin 'SirVer/ultisnips'
 
-"turn on syntax highlighting
-syntax on
+let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsEditSplit="vertical"
+" -------------------------------------------
 
-" Change leader to a comma because the backslash is too far away
-" That means all \x commands turn into ,x
-" The mapleader has to be set before vundle starts loading all 
-" the plugins.
-let mapleader=","
-set timeout timeoutlen=1500
 
-" ================ Turn Off Swap Files ==============
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
 
-set noswapfile
-set nobackup
-set nowb
 
-" Persistent undo ---------------------- {{{
-" Keep undo history across sessions, by storing in file.
-" Only works all the time.
-if has('persistent_undo') && !isdirectory(expand('~').'/.vim/backups')
-silent !mkdir ~/.vim/backups > /dev/null 2>&1
-set undodir=~/.vim/backups
-set undofile
-endif
-" }}}
+" ========================================================================
+" Ruby stuff
+" ========================================================================
+syntax on                 " Enable syntax highlighting
 
-" Vim folding settings ---------------------- {{{
-set foldmethod=manual
-
-augroup filetype_vim
-    autocmd!
-    autocmd FileType vim setlocal foldmethod=marker
+augroup myfiletypes
+  " Clear old autocmds in group
+  autocmd!
+  " autoindent with two spaces, always expand tabs
+  autocmd FileType ruby,eruby,yaml setlocal ai sw=2 sts=2 et
+  autocmd FileType ruby,eruby,yaml setlocal path+=lib
+  autocmd FileType ruby,eruby,yaml setlocal colorcolumn=80
+  " Make ?s part of words
+  autocmd FileType ruby,eruby,yaml setlocal iskeyword+=?
 augroup END
 
-nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
-vnoremap <Space> zf
-" }}}
-
-
-
-"
-" ================ Scrolling ========================
-
-set scrolloff=8         "Start scrolling when we're 8 lines away from margins
-set sidescrolloff=15
-set sidescroll=1
-
-" ================ Search ===========================
-
-set incsearch       " Find the next match as we type the search
-set hlsearch        " Highlight searches by default
-set ignorecase      " Ignore case when searching...
-set smartcase       " ...unless we type a capital
-set laststatus=2
-
-" ================ Indentation ======================
-
-set autoindent
-set smartindent
-set smarttab
-set shiftwidth=2
-set softtabstop=2
-set tabstop=2
-set expandtab
-
-filetype plugin on
-filetype indent on
-
-" Display tabs and trailing spaces visually
-set list listchars=tab:\ \ ,trail:·
-
-set linebreak    "Wrap lines at convenient points
-
-" ================ Custom Settings ========================
-
-" Window pane resizing
-nnoremap <silent> <Leader>[ :exe "resize " . (winheight(0) * 3/2)<CR>
-nnoremap <silent> <Leader>] :exe "resize " . (winheight(0) * 2/3)<CR>
-
-" ===== Seeing Is Believing =====
-" " Assumes you have a Ruby with SiB available in the PATH
-" " If it doesn't work, you may need to `gem install seeing_is_believing -v
-" 3.0.0.beta.6`
-" " ...yeah, current release is a beta, which won't auto-install
-"
-" " Annotate every line
-"
-nmap <leader>b :%!seeing_is_believing --timeout 12 --line-length 500 --number-of-captures 300 --alignment-strategy chunk<CR>;
-"
-"  " Annotate marked lines
-"
-nmap <leader>n :%.!seeing_is_believing --timeout 12 --line-length 500 --number-of-captures 300 --alignment-strategy chunk --xmpfilter-style<CR>;
-"
-"  " Remove annotations
-"
-nmap <leader>c :%.!seeing_is_believing --clean<CR>;
-"
-"  " Mark the current line for annotation
-"
-nnoremap <leader>m A # => <Esc>
-"
-"  " Mark the highlighted lines for annotation
-"
-vnoremap <leader>m :norm A # => <Esc>
-
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-
-noremap <Leader>y "+y
-noremap <Leader>d "+d
-
-let g:tmux_navigator_no_mappings = 1
-
-nnoremap <silent> {Left-mapping} :TmuxNavigateLeft<cr>
-nnoremap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
-nnoremap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
-nnoremap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
-nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
-
-let g:spec_runner_dispatcher = "VtrSendCommand! {command}"
-
-" RSpec.vim mappings
-noremap <Leader>t :call RunCurrentSpecFile()<CR>
-noremap <Leader>s :call RunNearestSpec()<CR>
-noremap <Leader>l :call RunLastSpec()<CR>
-noremap <Leader>a :call RunAllSpecs()<CR>
-
-nnoremap <leader>irb :VtrOpenRunner {'orientation': 'h', 'percentage': 50, 'cmd': 'irb'}<cr>
-
-" For ruby block selections
+" Enable built-in matchit plugin
 runtime macros/matchit.vim
+" ================
 
-" For Running plain Ruby test scripts
-nnoremap <leader>r :RunSpec<CR>
-nnoremap <leader>l :RunSpecLine<CR>
-nnoremap <leader>e :RunSpecLastRun<CR>
-nnoremap <leader>cr :RunSpecCloseResult<CR>
+let mapleader = ","
 
-" Move line down and up
-noremap <Leader>- :m .+1<CR>
-noremap <Leader>= :m .-2<CR>
+imap jj <esc>
+map <Leader>ac :sp app/controllers/application_controller.rb<cr>
+vmap <Leader>b :<C-U>!git blame <C-R>=expand("%:p") <CR> \| sed -n <C-R>=line("'<") <CR>,<C-R>=line("'>") <CR>p <CR>
+map <Leader>bb :!bundle install<cr>
+nmap <Leader>bi :source ~/.vimrc<cr>:PluginInstall<cr>
+vmap <Leader>bed "td?describe<cr>obed<tab><esc>"tpkdd/end<cr>o<esc>:nohl<cr>
+map <Leader>cc :!cucumber --drb %<CR>
+map <Leader>cu :Tabularize /\|<CR>
+map <Leader>cc :Rjcollection client/
+map <Leader>cj :Rjspec client/
+map <Leader>cm :Rjmodel client/
+map <Leader>cs :call SearchForCallSitesCursor()<CR>
+map <Leader>ct :Rtemplate client/
+map <Leader>cv :Rjview client/
+map <Leader>d orequire 'pry'<cr>binding.pry<esc>:w<cr>
+map <Leader>f :call OpenFactoryFile()<CR>
+map <Leader>fix :cnoremap % %<CR>
+map <Leader>fa :sp test/factories.rb<CR>
+map <Leader>i mmgg=G`m
+map <Leader>l :Eval<cr>
+map <Leader>m :Rmodel
+map <Leader>mf mmgqap`m:w<cr>
+map <Leader>o :w<cr>:call RunNearestSpec()<CR>
+map <Leader>p :set paste<CR><esc>"*]p:set nopaste<cr>
+map <Leader>q :copen<cr><cr>
+map <Leader>rs :vsp <C-r>#<cr><C-w>w
+map <Leader>rt q:?!ruby<cr><cr>
+map <Leader>rw :%s/\s\+$//<cr>:w<cr>
+map <Leader>sc :sp db/schema.rb<cr>
+map <Leader>sg :sp<cr>:grep<space>
+map <Leader>sm :RSmodel
+map <Leader>sp yss<p>
+map <Leader>sn :UltiSnipsEdit<CR>
+map <Leader>so :so %<cr>
+map <Leader>sq j<c-v>}klllcs<esc>:wq<cr>
+map <Leader>ss :!spring stop<cr>
+map <Leader>st :!ruby -Itest % -n "//"<left><left>
+map <Leader>su :RSunittest
+map <Leader>sv :RSview
+map <Leader>t :w<cr>:call RunCurrentSpecFile()<CR>
+map <Leader>y :!rspec --drb %<cr>
+map <Leader>u :Runittest<cr>
+map <Leader>vc :Vcontroller<cr>
+map <Leader>vf :Vfunctional<cr>
+map <Leader>vu :AV<CR>
+map <Leader>vm :Vmodel<cr>
+map <Leader>vv :Vview<cr>
+map <Leader>w <C-w>w
+map <Leader>x :exec getline(".")<cr>
 
-" Uppercase converter for insert and normal mode
-vnoremap <c-u> U
+map <C-h> :nohl<cr>
 
-" Open up vimrc in new pane
-nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+" Emacs-like beginning and end of line.
+imap <c-e> <c-o>$
+imap <c-a> <c-o>^
 
-" Source new changes
-nnoremap <leader>sv :source $MYVIMRC<cr>
+set backspace=indent,eol,start " allow backspacing over everything in insert mode
+set history=100   " keep 500 lines of command line history
+set ruler   " show the cursor position all the time
+set showcmd   " display incomplete commands
+set showmatch
+set nowrap
+set backupdir=~/.tmp
+set directory=~/.tmp " Don't clutter my dirs up with swp and tmp files
+set autoread
+set wmh=0
+set viminfo+=!
+set guioptions-=T
+set guifont=Triskweline_10:h10
+set et
+set sw=2
+set smarttab
+set noincsearch
+set ignorecase smartcase
+set laststatus=2  " Always show status line.
+set relativenumber
+set number
+set gdefault " assume the /g flag on :s substitutions to replace all matches in a line
+set autoindent " always set autoindenting on
+set lazyredraw " Don't redraw screen when running macros.
 
-" Show hidden files in NERDtree
-let NERDTreeShowHidden=1
-let NERDTreeQuitOnOpen = 0
-nnoremap <Leader>d :let NERDTreeQuitOnOpen = 1<bar>NERDTreeToggle<CR>
-nnoremap <Leader>D :let NERDTreeQuitOnOpen = 0<bar>NERDTreeToggle<CR>
+" Set the tag file search order
+set tags=./tags;
 
-" Abbreviations
-iabbrev init initialize
-iabbrev dep dependent: :destroy
-iabbrev ewo each_with_object
-iabbrev des describe
-iabbrev vpo validates_presence_of :
+" Use Silver Searcher instead of grep
+set grepprg=ag
 
-" Adding quotes
-nnoremap <leader>' viw<esc>a'<esc>bi'<esc>lel
-nnoremap <leader>" viw<esc>a"<esc>bi"<esc>lel
+" Ignore stuff that can't be opened
+set wildignore+=tmp/**
 
-" Override for beginning and end of line nav
-nnoremap H 0
-nnoremap L $
+" Highlight the status line
+highlight StatusLine ctermfg=blue ctermbg=yellow
 
-" Autocommands
+" Format xml files
+au FileType xml exe ":silent 1,$!xmllint --format --recover - 2>/dev/null"
 
-augroup filetype_autocompletes
-    autocmd!
-    autocmd FileType python :iabbrev <buffer> iff if:<left>
-    autocmd FileType javascript :iabbrev <buffer> iff if ()<left>
-augroup END
+set shiftround " When at 3 spaces and I hit >>, go to 4, not 5.
 
-" Operator pending mappings
+set nofoldenable " Say no to code folding...
 
-"" Run cin( to delete and start typing in the next parens on that line
-onoremap in( :<c-u>normal! f(vi(<cr>
-onoremap in{ :<c-u>normal! f{vi{<cr>
+command! Q q " Bind :Q to :q
+command! Qall qall
+command! QA qall
+command! E e
+command! W w
+command! Wq wq
 
-" For ctags <> ctrlptag integration
-nnoremap <leader>. :CtrlPTag<cr>
+" Disable K looking stuff up
+map K <Nop>
 
-" Settings for the indentation viewier
-hi IndentGuidesOdd  ctermbg=black
-hi IndentGuidesEven ctermbg=darkgrey
+au BufNewFile,BufRead *.txt setlocal nolist " Don't display whitespace
 
-" Add spaces after comment delimiters by default
-let g:NERDSpaceDelims = 1
+" (Hopefully) removes the delay when hitting esc in insert mode
+set noesckeys
+set ttimeout
+set ttimeoutlen=1
 
-" Use compact syntax for prettified multi-line comments
-let g:NERDCompactSexyComs = 1
+" Turn on spell-checking in markdown and text.
+" au BufRead,BufNewFile *.md,*.txt setlocal spell
 
-" Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDDefaultAlign = 'left'
+function! SearchForCallSitesCursor()
+  let searchTerm = expand("<cword>")
+  call SearchForCallSites(searchTerm)
+endfunction
 
-" Set a language to use its alternate delimiters by default
-let g:NERDAltDelims_java = 1
+" Search for call sites for term (excluding its definition) and
+" load into the quickfix list.
+function! SearchForCallSites(term)
+  cexpr system('ag ' . shellescape(a:term) . '\| grep -v def')
+endfunction
 
-" Add your own custom formats or override the defaults
-let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
+" Make CtrlP use ag for listing the files. Way faster and no useless files.
+let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+let g:ctrlp_use_caching = 1
 
-" Allow commenting and inverting empty lines (useful when commenting a region)
-let g:NERDCommentEmptyLines = 1
+" Don't jump to a different place just because the file is already open, dingus
+let g:ctrlp_switch_buffer = 0
 
-" Enable trimming of trailing whitespace when uncommenting
-let g:NERDTrimTrailingWhitespace = 1
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Test-running stuff
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Prettier install and config
-let g:prettier#autoformat = 0
-autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
+let g:rspec_command = "!clear && bin/rspec {spec}"
 
-" Because node_modules shouldn't be ctrlp'd
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Let's be reasonable, shall we?
+nmap k gk
+nmap j gj
+
+let g:CommandTMaxHeight=50
+let g:CommandTMatchWindowAtTop=1
+
+" Don't wait so long for the next keypress (particularly in ambigious Leader
+" situations.
+set timeoutlen=500
+
+" Remove trailing whitespace on save for ruby files.
+" au BufWritePre *.rb :%s/\s\+$//e
+
+function! OpenFactoryFile()
+  if filereadable("test/factories.rb")
+    execute ":sp test/factories.rb"
+  else
+    execute ":sp spec/factories.rb"
+  end
+endfunction
+
+" Set gutter background to black
+highlight SignColumn ctermbg=black
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" RENAME CURRENT FILE (thanks Gary Bernhardt)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! RenameFile()
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
+endfunction
+map <Leader>n :call RenameFile()<cr>
+
+" Display extra whitespace
+set list listchars=tab:»·,trail:·
+
+" Switch syntax highlighting on, when the terminal has colors
+" Also switch on highlighting the last used search pattern.
+if &t_Co > 2 || has("gui_running")
+  syntax on
+  set hlsearch
+endif
+
+" Make it more obvious which paren I'm on
+hi MatchParen cterm=none ctermbg=black ctermfg=yellow
+
+" By default, vim thinks .md is Modula-2.
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+
+" Without this, vim breaks in the middle of words when wrapping
+autocmd FileType markdown setlocal nolist wrap lbr
+
+" Wrap the quickfix window
+autocmd FileType qf setlocal wrap linebreak
+
+" Don't automatically continue comments after newline
+autocmd BufNewFile,BufRead * setlocal formatoptions-=cro
+
+" Make it more obviouser when lines are too long
+highlight ColorColumn ctermbg=235
+
+" ========================================================================
+" End of things set by me.
+" ========================================================================
+
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+
+  " Enable file type detection.
+  " Use the default filetype settings, so that mail gets 'tw' set to 72,
+  " 'cindent' is on in C files, etc.
+  " Also load indent files, to automatically do language-dependent indenting.
+  filetype plugin indent on
+
+  " Put these in an autocmd group, so that we can delete them easily.
+  augroup vimrcEx
+    au!
+
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it when the position is invalid or when inside an event handler
+    " (happens when dropping a file on gvim).
+    autocmd BufReadPost *
+          \ if line("'\"") > 0 && line("'\"") <= line("$") |
+          \   exe "normal g`\"" |
+          \ endif
+
+  augroup END
+
+endif " has("autocmd")
