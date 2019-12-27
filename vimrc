@@ -12,7 +12,6 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 " My bundles
-Plugin 'scrooloose/nerdtree'
 Plugin 'thoughtbot/vim-rspec'
 Plugin 'tpope/vim-bundler'
 Plugin 'tpope/vim-endwise'
@@ -21,6 +20,8 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'vim-airline/vim-airline'
+Plugin 'joshdick/onedark.vim'
 
 " --------- Snippets -------------------------
 Plugin 'SirVer/ultisnips'
@@ -47,7 +48,7 @@ augroup myfiletypes
   " autoindent with two spaces, always expand tabs
   autocmd FileType ruby,eruby,yaml setlocal ai sw=2 sts=2 et
   autocmd FileType ruby,eruby,yaml setlocal path+=lib
-  autocmd FileType ruby,eruby,yaml setlocal colorcolumn=80
+  " autocmd FileType ruby,eruby,yaml setlocal colorcolumn=80
   " Make ?s part of words
   autocmd FileType ruby,eruby,yaml setlocal iskeyword+=?
 augroup END
@@ -58,55 +59,30 @@ runtime macros/matchit.vim
 
 let mapleader = ","
 
-imap jj <esc>
+imap jk <esc>
 map <Leader>ac :sp app/controllers/application_controller.rb<cr>
-vmap <Leader>b :<C-U>!git blame <C-R>=expand("%:p") <CR> \| sed -n <C-R>=line("'<") <CR>,<C-R>=line("'>") <CR>p <CR>
+map <Leader>sc :sp db/schema.rb<cr>
 map <Leader>bb :!bundle install<cr>
 nmap <Leader>bi :source ~/.vimrc<cr>:PluginInstall<cr>
 vmap <Leader>bed "td?describe<cr>obed<tab><esc>"tpkdd/end<cr>o<esc>:nohl<cr>
-map <Leader>cc :!cucumber --drb %<CR>
-map <Leader>cu :Tabularize /\|<CR>
-map <Leader>cc :Rjcollection client/
-map <Leader>cj :Rjspec client/
-map <Leader>cm :Rjmodel client/
 map <Leader>cs :call SearchForCallSitesCursor()<CR>
-map <Leader>ct :Rtemplate client/
-map <Leader>cv :Rjview client/
 map <Leader>d orequire 'pry'<cr>binding.pry<esc>:w<cr>
-map <Leader>f :call OpenFactoryFile()<CR>
-map <Leader>fix :cnoremap % %<CR>
 map <Leader>fa :sp test/factories.rb<CR>
-map <Leader>i mmgg=G`m
-map <Leader>l :Eval<cr>
-map <Leader>m :Rmodel
-map <Leader>mf mmgqap`m:w<cr>
+map <Leader>i mmgg=G`m        " fix indentation
 map <Leader>o :w<cr>:call RunNearestSpec()<CR>
-map <Leader>p :set paste<CR><esc>"*]p:set nopaste<cr>
-map <Leader>q :copen<cr><cr>
-map <Leader>rs :vsp <C-r>#<cr><C-w>w
 map <Leader>rt q:?!ruby<cr><cr>
 map <Leader>rw :%s/\s\+$//<cr>:w<cr>
-map <Leader>sc :sp db/schema.rb<cr>
-map <Leader>sg :sp<cr>:grep<space>
-map <Leader>sm :RSmodel
+map <Leader>gs :sp<cr>:grep<space>
 map <Leader>sp yss<p>
 map <Leader>sn :UltiSnipsEdit<CR>
-map <Leader>so :so %<cr>
-map <Leader>sq j<c-v>}klllcs<esc>:wq<cr>
 map <Leader>ss :!spring stop<cr>
-map <Leader>st :!ruby -Itest % -n "//"<left><left>
-map <Leader>su :RSunittest
-map <Leader>sv :RSview
 map <Leader>t :w<cr>:call RunCurrentSpecFile()<CR>
-map <Leader>y :!rspec --drb %<cr>
 map <Leader>u :Runittest<cr>
 map <Leader>vc :Vcontroller<cr>
-map <Leader>vf :Vfunctional<cr>
 map <Leader>vu :AV<CR>
 map <Leader>vm :Vmodel<cr>
 map <Leader>vv :Vview<cr>
 map <Leader>w <C-w>w
-map <Leader>x :exec getline(".")<cr>
 
 map <C-h> :nohl<cr>
 
@@ -138,6 +114,8 @@ set number
 set gdefault " assume the /g flag on :s substitutions to replace all matches in a line
 set autoindent " always set autoindenting on
 set lazyredraw " Don't redraw screen when running macros.
+
+colorscheme onedark
 
 " Set the tag file search order
 set tags=./tags;
@@ -267,9 +245,6 @@ autocmd FileType qf setlocal wrap linebreak
 
 " Don't automatically continue comments after newline
 autocmd BufNewFile,BufRead * setlocal formatoptions-=cro
-
-" Make it more obviouser when lines are too long
-highlight ColorColumn ctermbg=235
 
 " ========================================================================
 " End of things set by me.
