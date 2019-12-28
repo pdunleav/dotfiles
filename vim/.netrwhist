@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =7
+let g:netrw_dirhist_7='/Users/phelim/code/pdunleav/idopia'
+let g:netrw_dirhist_6='/Users/phelim/code/pdunleav/idopia/app/assets/stylesheets'
+let g:netrw_dirhist_5='/Users/phelim/code/pdunleav/idopia/app/assets'
+let g:netrw_dirhist_4='/Users/phelim/code/pdunleav/idopia/app/assets/config'
+let g:netrw_dirhist_3='/Users/phelim/code/pdunleav/idopia'
+let g:netrw_dirhist_2='/Users/phelim/code/pdunleav/idopia/app'
+let g:netrw_dirhist_1='/Users/phelim/code/pdunleav/idopia'
