@@ -22,12 +22,15 @@ Plugin 'vim-ruby/vim-ruby'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'joshdick/onedark.vim'
+Plugin 'tpope/vim-commentary'
 
 " --------- Snippets -------------------------
 Plugin 'SirVer/ultisnips'
 
 let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
 let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 let g:UltiSnipsEditSplit="vertical"
 " -------------------------------------------
 
@@ -63,15 +66,10 @@ imap jk <esc>
 map <Leader>ac :sp app/controllers/application_controller.rb<cr>
 map <Leader>sc :sp db/schema.rb<cr>
 map <Leader>bb :!bundle install<cr>
-nmap <Leader>bi :source ~/.vimrc<cr>:PluginInstall<cr>
-vmap <Leader>bed "td?describe<cr>obed<tab><esc>"tpkdd/end<cr>o<esc>:nohl<cr>
-map <Leader>cs :call SearchForCallSitesCursor()<CR>
-map <Leader>d orequire 'pry'<cr>binding.pry<esc>:w<cr>
+nmap <Leader>pi :source ~/.vimrc<cr>:PluginInstall<cr>
 map <Leader>fa :sp test/factories.rb<CR>
 map <Leader>i mmgg=G`m        " fix indentation
 map <Leader>o :w<cr>:call RunNearestSpec()<CR>
-map <Leader>rt q:?!ruby<cr><cr>
-map <Leader>rw :%s/\s\+$//<cr>:w<cr>
 map <Leader>gs :sp<cr>:grep<space>
 map <Leader>sp yss<p>
 map <Leader>sn :UltiSnipsEdit<CR>
@@ -90,8 +88,16 @@ map <C-h> :nohl<cr>
 imap <c-e> <c-o>$
 imap <c-a> <c-o>^
 
+inoremap " ""<left>
+inoremap ' ''<left>
+inoremap ( ()<left>
+inoremap [ []<left>
+inoremap { {}<left>
+inoremap {<CR> {<CR>}<ESC>O
+inoremap {;<CR> {<CR>};<ESC>O
+
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
-set history=100   " keep 500 lines of command line history
+set history=100   " keep 100 lines of command line history
 set ruler   " show the cursor position all the time
 set showcmd   " display incomplete commands
 set showmatch
@@ -114,6 +120,9 @@ set number
 set gdefault " assume the /g flag on :s substitutions to replace all matches in a line
 set autoindent " always set autoindenting on
 set lazyredraw " Don't redraw screen when running macros.
+set splitbelow
+set splitright
+set scrolloff=8         "Start scrolling when we're 8 lines away from margins
 
 colorscheme onedark
 
@@ -245,6 +254,9 @@ autocmd FileType qf setlocal wrap linebreak
 
 " Don't automatically continue comments after newline
 autocmd BufNewFile,BufRead * setlocal formatoptions-=cro
+
+" Remove trailing whitespace on save
+autocmd BufWritePre * %s/\s\+$//e
 
 " ========================================================================
 " End of things set by me.
