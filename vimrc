@@ -23,6 +23,8 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'joshdick/onedark.vim'
 Plugin 'tpope/vim-commentary'
+Plugin 'ervandew/supertab'
+Plugin 'airblade/vim-gitgutter'
 
 " --------- Snippets -------------------------
 Plugin 'SirVer/ultisnips'
@@ -96,6 +98,10 @@ inoremap { {}<left>
 inoremap {<CR> {<CR>}<ESC>O
 inoremap {;<CR> {<CR>};<ESC>O
 
+map <C-n> :tabnew<CR>
+map <C-j> :tabprevious<CR>
+map <C-k> :tabnext<CR>
+
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
 set history=100   " keep 100 lines of command line history
 set ruler   " show the cursor position all the time
@@ -123,6 +129,7 @@ set lazyredraw " Don't redraw screen when running macros.
 set splitbelow
 set splitright
 set scrolloff=8         "Start scrolling when we're 8 lines away from margins
+set sidescrolloff=10
 
 colorscheme onedark
 
