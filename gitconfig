@@ -11,7 +11,7 @@
 
 [core]
   pager = less -FRSX
-	editor = /usr/local/bin/vim
+  editor = /usr/local/bin/vim
 
 [alias]
   co = checkout
@@ -46,6 +46,10 @@
 
 [branch "master"]
   mergeoptions = --no-edit
+
 [user]
 	email = dunleavy.phelim@gmail.com
 	name = Phelim Dunleavy
+
+[pull]
+  rebase = false
