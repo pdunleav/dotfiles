@@ -1,107 +1,7 @@
-" ========================================================================
-" Vundle stuff
-" ========================================================================
-set nocompatible " Required by vundle
-filetype off     " Required by vundle
+" source the init.vim for neovim shortcut
+map <C-s> :source ~/.config/nvim/init.vim<cr>
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-
-" My bundles
-Plugin 'thoughtbot/vim-rspec'
-Plugin 'tpope/vim-bundler'
-Plugin 'tpope/vim-endwise'
-Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-surround'
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'vim-airline/vim-airline'
-Plugin 'joshdick/onedark.vim'
-Plugin 'tpope/vim-commentary'
-Plugin 'ervandew/supertab'
-Plugin 'airblade/vim-gitgutter'
-
-" --------- Snippets -------------------------
-Plugin 'SirVer/ultisnips'
-
-let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-let g:UltiSnipsEditSplit="vertical"
-" -------------------------------------------
-
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-
-
-" ========================================================================
-" Ruby stuff
-" ========================================================================
-syntax on                 " Enable syntax highlighting
-
-augroup myfiletypes
-  " Clear old autocmds in group
-  autocmd!
-  " autoindent with two spaces, always expand tabs
-  autocmd FileType ruby,eruby,yaml setlocal ai sw=2 sts=2 et
-  autocmd FileType ruby,eruby,yaml setlocal path+=lib
-  " autocmd FileType ruby,eruby,yaml setlocal colorcolumn=80
-  " Make ?s part of words
-  autocmd FileType ruby,eruby,yaml setlocal iskeyword+=?
-augroup END
-
-" Enable built-in matchit plugin
-runtime macros/matchit.vim
-" ================
-
-let mapleader = ","
-
-imap jk <esc>
-map <Leader>ac :sp app/controllers/application_controller.rb<cr>
-map <Leader>sc :sp db/schema.rb<cr>
-map <Leader>bb :!bundle install<cr>
-nmap <Leader>pi :source ~/.vimrc<cr>:PluginInstall<cr>
-map <Leader>fa :sp test/factories.rb<CR>
-map <Leader>i mmgg=G`m        " fix indentation
-map <Leader>o :w<cr>:call RunNearestSpec()<CR>
-map <Leader>gs :sp<cr>:grep<space>
-map <Leader>sp yss<p>
-map <Leader>sn :UltiSnipsEdit<CR>
-map <Leader>ss :!spring stop<cr>
-map <Leader>t :w<cr>:call RunCurrentSpecFile()<CR>
-map <Leader>u :Runittest<cr>
-map <Leader>vc :Vcontroller<cr>
-map <Leader>vu :AV<CR>
-map <Leader>vm :Vmodel<cr>
-map <Leader>vv :Vview<cr>
-map <Leader>w <C-w>w
-
-map <C-h> :nohl<cr>
-
-" Emacs-like beginning and end of line.
-imap <c-e> <c-o>$
-imap <c-a> <c-o>^
-
-inoremap " ""<left>
-inoremap ' ''<left>
-inoremap ( ()<left>
-inoremap [ []<left>
-inoremap { {}<left>
-inoremap {<CR> {<CR>}<ESC>O
-inoremap {;<CR> {<CR>};<ESC>O
-
-map <C-n> :tabnew<CR>
-map <C-j> :tabprevious<CR>
-map <C-k> :tabnext<CR>
-
+set encoding=UTF-8
 set backspace=indent,eol,start " allow backspacing over everything in insert mode
 set history=100   " keep 100 lines of command line history
 set ruler   " show the cursor position all the time
@@ -113,183 +13,146 @@ set directory=~/.tmp " Don't clutter my dirs up with swp and tmp files
 set autoread
 set wmh=0
 set viminfo+=!
-set guioptions-=T
-set guifont=Triskweline_10:h10
 set et
-set sw=2
+set sw=2 " sw = shift width
 set smarttab
 set noincsearch
 set ignorecase smartcase
 set laststatus=2  " Always show status line.
-set relativenumber
-set number
+set relativenumber " show relative line numbers to current line
+set number " show line number
+set cursorline " highlight current line
+set cursorcolumn "highlight current column
 set gdefault " assume the /g flag on :s substitutions to replace all matches in a line
 set autoindent " always set autoindenting on
 set lazyredraw " Don't redraw screen when running macros.
-set splitbelow
-set splitright
-set scrolloff=8         "Start scrolling when we're 8 lines away from margins
-set sidescrolloff=10
+set splitbelow " Open splits below current pane
+set splitright " Open vertical splits to the right of current pane
+set scrolloff=10         "Start scrolling when we're 10 lines away from margins
+set sidescrolloff=8
+set guifont=Menlo:h10
+set autoread
+set hlsearch " highlight search
+" syntax enable
+syntax on
 
-colorscheme onedark
 
-" Set the tag file search order
-set tags=./tags;
+" strip trailing whitespace on save
+autocmd BufWritePre * :%s/\s\+$//e
 
-" Use Silver Searcher instead of grep
-set grepprg=ag
+" when entering insert mode center the cursor
+autocmd InsertEnter * norm zz
 
-" Ignore stuff that can't be opened
-set wildignore+=tmp/**
+call plug#begin()
+" themes + status bar
+Plug 'vim-airline/vim-airline'
+Plug 'kyoz/purify', { 'rtp': 'vim' }
+Plug 'sickill/vim-monokai'
+Plug 'patstockwell/vim-monokai-tasty'
+Plug 'preservim/nerdtree'
+" git
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+" ruby + rails
+Plug 'tpope/vim-rails'
+Plug 'vim-ruby/vim-ruby'
+Plug 'vim-test/vim-test'
+" elm
+Plug 'elmcast/elm-vim'
+" searching and files
+Plug 'jremmen/vim-ripgrep'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'pechorin/any-jump.vim'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'ryanoasis/vim-devicons'
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'nvim-telescope/telescope.nvim'
+" Utilities
+Plug 'preservim/nerdcommenter'
+Plug 'tpope/vim-endwise'
+Plug 'AndrewRadev/sideways.vim'
+Plug 'AndrewRadev/switch.vim'
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'ervandew/supertab'
+call plug#end()
 
-" Highlight the status line
-highlight StatusLine ctermfg=blue ctermbg=yellow
-
-" Format xml files
-au FileType xml exe ":silent 1,$!xmllint --format --recover - 2>/dev/null"
-
-set shiftround " When at 3 spaces and I hit >>, go to 4, not 5.
-
-set nofoldenable " Say no to code folding...
-
-command! Q q " Bind :Q to :q
-command! Qall qall
-command! QA qall
-command! E e
-command! W w
-command! Wq wq
-
-" Disable K looking stuff up
-map K <Nop>
-
-au BufNewFile,BufRead *.txt setlocal nolist " Don't display whitespace
-
-" (Hopefully) removes the delay when hitting esc in insert mode
-set noesckeys
-set ttimeout
-set ttimeoutlen=1
-
-" Turn on spell-checking in markdown and text.
-" au BufRead,BufNewFile *.md,*.txt setlocal spell
-
-function! SearchForCallSitesCursor()
-  let searchTerm = expand("<cword>")
-  call SearchForCallSites(searchTerm)
-endfunction
-
-" Search for call sites for term (excluding its definition) and
-" load into the quickfix list.
-function! SearchForCallSites(term)
-  cexpr system('ag ' . shellescape(a:term) . '\| grep -v def')
-endfunction
-
-" Make CtrlP use ag for listing the files. Way faster and no useless files.
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-let g:ctrlp_use_caching = 1
-
-" Don't jump to a different place just because the file is already open, dingus
-let g:ctrlp_switch_buffer = 0
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Test-running stuff
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-let g:rspec_command = "!clear && bin/rspec {spec}"
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Let's be reasonable, shall we?
-nmap k gk
-nmap j gj
-
-let g:CommandTMaxHeight=50
-let g:CommandTMatchWindowAtTop=1
-
-" Don't wait so long for the next keypress (particularly in ambigious Leader
-" situations.
-set timeoutlen=500
-
-" Remove trailing whitespace on save for ruby files.
-" au BufWritePre *.rb :%s/\s\+$//e
-
-function! OpenFactoryFile()
-  if filereadable("test/factories.rb")
-    execute ":sp test/factories.rb"
-  else
-    execute ":sp spec/factories.rb"
-  end
-endfunction
-
-" Set gutter background to black
-highlight SignColumn ctermbg=black
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" RENAME CURRENT FILE (thanks Gary Bernhardt)
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! RenameFile()
-  let old_name = expand('%')
-  let new_name = input('New file name: ', expand('%'), 'file')
-  if new_name != '' && new_name != old_name
-    exec ':saveas ' . new_name
-    exec ':silent !rm ' . old_name
-    redraw!
-  endif
-endfunction
-map <Leader>n :call RenameFile()<cr>
-
-" Display extra whitespace
-set list listchars=tab:»·,trail:·
-
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-  syntax on
-  set hlsearch
+if (has('termguicolors'))
+  set termguicolors
 endif
 
-" Make it more obvious which paren I'm on
-hi MatchParen cterm=none ctermbg=black ctermfg=yellow
+colorscheme monokai
+let g:airline_theme='monokai_tasty'
 
-" By default, vim thinks .md is Modula-2.
-autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+" change the mapleader from \ to space
+let mapleader=" "
 
-" Without this, vim breaks in the middle of words when wrapping
-autocmd FileType markdown setlocal nolist wrap lbr
+" my leader mappings to specific files to open in a new tab
+map <Leader>ro :tabnew config/routes.rb<cr>
+map <Leader>sc :tabnew db/schema.rb<cr>
+map <Leader>ac :sp app/controllers/application_controller.rb<cr>
 
-" Wrap the quickfix window
-autocmd FileType qf setlocal wrap linebreak
+" leader commands by Plugin
+"
+" Sideways
+map <Leader>sl :SidewaysLeft<cr>
+map <Leader>sr :SidewaysRight<cr>
 
-" Don't automatically continue comments after newline
-autocmd BufNewFile,BufRead * setlocal formatoptions-=cro
+" navigation re mappings
+" Allow using ctrl-j k l h to navigate between window splits
+map <C-h> <C-W>h
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-l> <C-W>l
 
-" Remove trailing whitespace on save
-autocmd BufWritePre * %s/\s\+$//e
+" Better indenting
+vnoremap < <gv
+vnoremap > >gv
 
-" ========================================================================
-" End of things set by me.
-" ========================================================================
+" shortcut for creating a new tab
+nmap <Leader>tt :tabnew<cr>
 
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
+" shortcut for toggling NERDTree
+nmap <Leader>nt :NERDTreeToggle<CR>
 
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
+" shortcut to delete current file and close buffer
+nmap <Leader>dcf<CR>
 
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-    au!
+" use tab to switch between tabs
+nmap <Tab> :tabnext<CR>
+nmap <S-Tab> :tabprev<CR>
 
-    " When editing a file, always jump to the last known cursor position.
-    " Don't do it when the position is invalid or when inside an event handler
-    " (happens when dropping a file on gvim).
-    autocmd BufReadPost *
-          \ if line("'\"") > 0 && line("'\"") <= line("$") |
-          \   exe "normal g`\"" |
-          \ endif
+map <Leader>s :TestNearest<CR>
+map <Leader>t :TestFile<CR>
+map <Leader>a :TestSuite<CR>
+map <Leader>l :TestLast<CR>
+map <Leader>v :TestVisit<CR>
+nmap <Leader>rs :exe "! bundle exec rspec -fd" . expand("%")<CR>
 
-  augroup END
+nmap <leader>ru :exe "! bundle exec rubocop " . expand("%")<CR>
+nmap <leader>ra :exe "! bundle exec rubocop -A " . expand("%")<CR>
 
-endif " has("autocmd")
+" FZF leader shortcut
+nmap <Leader>f :Files<CR>
+" nmap <Leader>rg :Rg<CR>
+nmap <Leader>rg :Telescope live_grep<CR>
+
+" vim git stuff
+nmap <leader>gs :G<CR>
+nmap <leader>gd :Git diff<CR>
+nmap <leader>gb :Git blame<CR>
+
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+
+" airline
+let g:airline_powerline_fonts = 1
+let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
+
+" any jump
+let g:any_jump_window_width_ratio  = 0.8
+let g:any_jump_window_height_ratio = 0.8
+" anyjump background colour
+hi Pmenu guibg=#1b1b1b ctermbg=Black
