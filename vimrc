@@ -118,7 +118,7 @@ nmap <Leader>tt :tabnew<cr>
 nmap <Leader>nt :NERDTreeToggle<CR>
 
 " shortcut to delete current file and close buffer
-nmap <Leader>dcf<CR>
+nmap <Leader>dcf :call delete(expand('%')) | bdelete!
 
 " use tab to switch between tabs
 nmap <Tab> :tabnext<CR>
