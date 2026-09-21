@@ -54,7 +54,6 @@
     "**/vendor/**": true
   },
   "git.enabled": true,
-  "git.path": "/usr/local/bin/git",
   "python.defaultInterpreterPath": "~/.pyenv/shims/python",
   "python.formatting.provider": "yapf",
   "python.terminal.activateEnvironment": false,
