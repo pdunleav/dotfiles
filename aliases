@@ -2,7 +2,11 @@
 alias myip="curl https://ipinfo.io/json" # or /ip for plain-text ip
 alias speedtest="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -"
 
-alias vim=/usr/local/bin/vim
-
 alias serve='ruby -run -e httpd . -p 8000' # Or python -m SimpleHTTPServer :)
 
+alias cop='bundle exec rubocop'
+alias copa='bundle exec rubocop -A'
+alias ber='bundle exec rspec'
+
+# Machine-specific aliases live here, untracked
+[[ -f "$HOME/.aliases.local" ]] && source "$HOME/.aliases.local"

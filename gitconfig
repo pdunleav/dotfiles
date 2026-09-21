@@ -11,7 +11,7 @@
 
 [core]
   pager = less -FRSX
-  editor = /usr/local/bin/vim
+	editor = vi
 
 [alias]
   co = checkout
